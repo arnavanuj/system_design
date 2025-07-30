@@ -1,17 +1,280 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36" version="28.0.7">
   <diagram name="Page-1" id="xR8cId3RfPcgNPsCcaaC">
-    <mxGraphModel dx="1245" dy="891" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1025" dy="891" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="cFwZTcnUXvjwuw0aLBm1-1" value="&lt;b&gt;User Persona&lt;/b&gt;&lt;div&gt;-Hotel Managers&lt;/div&gt;&lt;div&gt;-Users&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="390" y="-40" width="120" height="60" as="geometry" />
+          <mxGeometry x="610" y="-40" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="cFwZTcnUXvjwuw0aLBm1-3" value="Functional Requirements&lt;div&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;-User should be able to search for rooms so filtering options should be there by location, price etc.&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;-User should be able to Book rooms and view room bookings&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;-User should be able to check bookings&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;-Hotel Manager should be able to update room price and room images&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;-Hotel Manager should be able to manage bookings&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;-Hotel Manager should be able to onboard the users&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;-Hotel Manager should also be able to do analytics&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="1">
-          <mxGeometry x="40" y="-40" width="260" height="320" as="geometry" />
+          <mxGeometry x="40" y="-40" width="530" height="160" as="geometry" />
         </mxCell>
         <mxCell id="cFwZTcnUXvjwuw0aLBm1-4" value="&lt;b&gt;Non functional Requirements&lt;/b&gt;&lt;div&gt;-Low Latency&lt;/div&gt;&lt;div&gt;-High Availability&lt;/div&gt;&lt;div&gt;-High consistency:&lt;/div&gt;&lt;div&gt;-Scale: There are 500k hotels&lt;/div&gt;&lt;div&gt;-There are 1000 rooms per hotel&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=0" vertex="1" parent="1">
-          <mxGeometry x="560" y="-40" width="240" height="130" as="geometry" />
+          <mxGeometry x="800" y="-40" width="240" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-6" value="UI/App&lt;div&gt;for Hotel Manager&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="866" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-7" value="Microservices, DB, Message Brokers&lt;div&gt;-Hotel Svc: It is used to manage the hotel onboarding and manage bookings. There can be various nodes of Hotel svc so it becomes horizontally scalable.&lt;/div&gt;&lt;div&gt;-CDN: Actual images will be stored here. The uRL of these images will be stored in relational db tables in MySQL It will be based on geological proximity.&lt;/div&gt;&lt;div&gt;-Kafka: If there is an event happening like a new hotel is added or some hotel is going under maintenance then this information is published to kafka cluster.&lt;/div&gt;&lt;div&gt;-Search Consumer: It will subscribe to topics from Kafka. It will move the messages to Elastic Search cluster to build text search functionality.&lt;/div&gt;&lt;div&gt;-All clusters can be horizontally scaled. e.g. If there is surge in traffic then more search consumers can be added, more kafka nodes can be added, more shards in ES cluster can be added and so on.&lt;/div&gt;&lt;div&gt;-Booking Service: So this service will be using a separate RDBMS cluster considering that the userbase is fairly large. Once booking is completed then this message needs to be published to Kafka Topic so that Search consumer can use this info and update the rooms availability&lt;/div&gt;&lt;div&gt;-Archival Svc: Once we have the booking completed then these can be archived so that MySQL cluster performance is not compromised. This archival SVC will only be used for GET requests and no POST requests.&lt;/div&gt;&lt;div&gt;-Cassandra Cluster: Since we have only Booking ID related query so we are going to use Cassandra for serving GET requests for Archival SVC.&lt;/div&gt;&lt;div&gt;-Notification SVC: Each time there is a booking or boooking change then users need to be notified, so we will have a notification svc which will be consuming Kafka topic messages.&lt;/div&gt;&lt;div&gt;-Spark Streaming consumer is created for Analytics purposes because we do not know how much data will be coming in advance.&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="150" width="1000" height="450" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-8" value="Load&lt;div&gt;Balancer&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="275" y="822" width="60" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-10" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=-0.011;entryY=0.569;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="cFwZTcnUXvjwuw0aLBm1-8">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="240" y="896" as="sourcePoint" />
+            <mxPoint x="290" y="846" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-12" target="cFwZTcnUXvjwuw0aLBm1-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-12" target="cFwZTcnUXvjwuw0aLBm1-28">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="440" y="776" />
+              <mxPoint x="700" y="776" />
+              <mxPoint x="700" y="696" />
+              <mxPoint x="930" y="696" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-12" value="Hotel Svc" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="866" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-13" value="MySQL Cluster&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="535" y="822" width="255" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-14" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=-0.011;entryY=0.569;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="cFwZTcnUXvjwuw0aLBm1-13">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="896" as="sourcePoint" />
+            <mxPoint x="550" y="846" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-15" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1.083;exitY=0.569;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-8" target="cFwZTcnUXvjwuw0aLBm1-12">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="530" y="846" as="sourcePoint" />
+            <mxPoint x="580" y="796" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-17" value="M" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="580" y="886" width="40" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-18" value="S" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="650" y="886" width="40" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-19" value="S" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="720" y="886" width="40" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-20" value="" style="endArrow=none;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-17" target="cFwZTcnUXvjwuw0aLBm1-18">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="530" y="846" as="sourcePoint" />
+            <mxPoint x="580" y="796" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-21" value="" style="endArrow=none;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="691" y="915" as="sourcePoint" />
+            <mxPoint x="721" y="915" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-22" value="CDN" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="390" y="966" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-28" value="Kafka Cluster" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="716" width="60" height="374" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-34" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-31" target="cFwZTcnUXvjwuw0aLBm1-33">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-31" value="Search Consumer" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="1026" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-32" value="" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="cFwZTcnUXvjwuw0aLBm1-31">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="890" y="1056" as="sourcePoint" />
+            <mxPoint x="580" y="960" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-36" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-33" target="cFwZTcnUXvjwuw0aLBm1-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-33" value="ES Cluster" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="1026" width="99" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-35" value="Search Svc" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="1026" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-37" value="UI/App&lt;div&gt;for Users&lt;/div&gt;&lt;div&gt;-Search functionality&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="1030" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-38" value="Load&lt;div&gt;Balancer&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="275" y="986" width="60" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-39" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=-0.011;entryY=0.569;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="cFwZTcnUXvjwuw0aLBm1-38">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="240" y="1060" as="sourcePoint" />
+            <mxPoint x="290" y="1010" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-40" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=-0.011;entryY=0.569;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="335" y="1060" as="sourcePoint" />
+            <mxPoint x="369" y="1060" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-41" target="cFwZTcnUXvjwuw0aLBm1-28">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="1120" />
+              <mxPoint x="930" y="1120" />
+              <mxPoint x="930" y="1090" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-41" value="Booking Svc" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="1195" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-42" value="UI/App&lt;div&gt;for Users&lt;/div&gt;&lt;div&gt;-Booking functionality&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="130" y="1199" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-43" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=-0.011;entryY=0.569;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="250" y="1229" as="sourcePoint" />
+            <mxPoint x="284" y="1229" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-44" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=-0.011;entryY=0.569;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="345" y="1229" as="sourcePoint" />
+            <mxPoint x="379" y="1229" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-45" value="Load&lt;div&gt;Balancer&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="1160" width="60" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-60" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-46" target="cFwZTcnUXvjwuw0aLBm1-56">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-46" value="MySQL Cluster&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="535" y="1150" width="255" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-47" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=-0.011;entryY=0.569;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="cFwZTcnUXvjwuw0aLBm1-46">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="1224" as="sourcePoint" />
+            <mxPoint x="550" y="1174" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-48" value="M" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="580" y="1214" width="40" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-64" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-49" target="cFwZTcnUXvjwuw0aLBm1-63">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-49" value="S" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="650" y="1214" width="40" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-50" value="S" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="720" y="1214" width="40" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-51" value="" style="endArrow=none;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-48" target="cFwZTcnUXvjwuw0aLBm1-49">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="530" y="1174" as="sourcePoint" />
+            <mxPoint x="580" y="1124" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-52" value="" style="endArrow=none;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="691" y="1243" as="sourcePoint" />
+            <mxPoint x="721" y="1243" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-53" value="Payment Svc" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="1320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-54" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-53" target="cFwZTcnUXvjwuw0aLBm1-41">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="540" y="1280" as="sourcePoint" />
+            <mxPoint x="590" y="1230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-62" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-56" target="cFwZTcnUXvjwuw0aLBm1-61">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-56" value="Archival Svc" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="850" y="1185" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-57" value="" style="endArrow=classic;html=1;rounded=0;exitX=1.05;exitY=0.897;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-28" target="cFwZTcnUXvjwuw0aLBm1-56">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="940" y="1260" as="sourcePoint" />
+            <mxPoint x="990" y="1210" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1030" y="1051" />
+              <mxPoint x="1030" y="1130" />
+              <mxPoint x="1030" y="1215" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-61" value="Cassandra Cluster" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="850" y="1320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-70" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-63" target="cFwZTcnUXvjwuw0aLBm1-65">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="670" y="1475" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-63" value="Redis" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="1320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-65" value="Booking Mgmt. Svc" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="1445" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-66" value="UI/App&lt;div&gt;to view Bookings&amp;nbsp;&lt;/div&gt;&lt;div&gt;USERS &amp;amp; HOTEL&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="130" y="1449" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-67" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=-0.011;entryY=0.569;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="250" y="1479" as="sourcePoint" />
+            <mxPoint x="284" y="1479" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-68" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=-0.011;entryY=0.569;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="345" y="1479" as="sourcePoint" />
+            <mxPoint x="379" y="1479" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-69" value="Load&lt;div&gt;Balancer&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="1410" width="60" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-71" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.003;entryY=0.894;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-61" target="cFwZTcnUXvjwuw0aLBm1-65">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="910" y="1499" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-72" value="Notification Svc" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="956" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-73" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="cFwZTcnUXvjwuw0aLBm1-72">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="960" y="996" as="sourcePoint" />
+            <mxPoint x="1010" y="946" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-74" value="Spark Streaming Consumer" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="710" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cFwZTcnUXvjwuw0aLBm1-75" value="" style="endArrow=classic;html=1;rounded=0;exitX=1.061;exitY=0.087;exitDx=0;exitDy=0;exitPerimeter=0;entryX=-0.031;entryY=0.622;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="cFwZTcnUXvjwuw0aLBm1-28" target="cFwZTcnUXvjwuw0aLBm1-74">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1110" y="800" as="sourcePoint" />
+            <mxPoint x="1160" y="750" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
